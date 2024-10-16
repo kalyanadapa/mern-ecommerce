@@ -32,34 +32,69 @@ const createUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid user data");
   }
 });
-
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(email);
-  console.log(password);
+  console.log("Email:", email);
+  console.log("Entered Password:", password);
 
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
+    // console.log("Existing User Found");
+    // console.log("Stored Hashed Password:", existingUser.password); 
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    console.log("Password Validity:", isPasswordValid); // Check password validity
 
     if (isPasswordValid) {
+   
       createToken(res, existingUser._id);
-
-      res.status(201).json({
+      console.log("Login successful for user:", existingUser.username);
+      res.status(200).json({
         _id: existingUser._id,
         username: existingUser.username,
         email: existingUser.email,
         isAdmin: existingUser.isAdmin,
       });
-      return;
+    } else {
+      return res.status(401).json({ message: "Invalid password" });
     }
+  } else {
+    return res.status(404).json({ message: "User not found" });
   }
 });
+
+// const loginUser = asyncHandler(async (req, res) => {
+//   const { email, password } = req.body;
+
+//   console.log(email);
+//   console.log(password);
+
+//   const existingUser = await User.findOne({ email });
+   
+//   if (existingUser) {
+//     console.log("existing");
+    
+//     const isPasswordValid = await bcrypt.compare(
+//       password,
+//       existingUser.password
+//     );
+//     console.log("Password Validity:", isPasswordValid); 
+//     if (isPasswordValid) {
+//       console.log("valid password");
+      
+//       createToken(res, existingUser._id);
+//       console.log("Login successful for user:", existingUser.username);
+//       res.status(201).json({
+//         _id: existingUser._id,
+//         username: existingUser.username,
+//         email: existingUser.email,
+//         isAdmin: existingUser.isAdmin,
+//       });
+//       return;
+//     }
+//   }
+// });
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {

@@ -31,11 +31,12 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login({ email, password }).unwrap();
-      console.log(res);
+      console.log("res",res);
       dispatch(setCredentials({ ...res }));
       navigate(redirect);
     } catch (err) {
       toast.error(err?.data?.message || err.error);
+      console.error("Login error:", err); 
     }
   };
 

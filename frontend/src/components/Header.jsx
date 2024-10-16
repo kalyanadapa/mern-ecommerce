@@ -17,8 +17,8 @@ const Header = () => {
   return (
     <>
       <div className="flex justify-around">
-        <div className="xl:block lg:hidden md:hidden:sm:hidden">
-          <div className="grid grid-cols-2">
+        <div className="xl:block lg:block md:block sm:hidden">
+          <div className="grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-1 gap-4">
             {data.map((product) => (
               <div key={product._id}>
                 <SmallProduct product={product} />
