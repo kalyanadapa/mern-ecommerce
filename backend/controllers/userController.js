@@ -11,7 +11,13 @@ const createUser = asyncHandler(async (req, res) => {
   }
 
   const userExists = await User.findOne({ email });
-  if (userExists) res.status(400).send("User already exists");
+  if (userExists) {
+    return res.status(400).json({
+        email: email,
+        message: "User already exists" // Optionally, include a message in the response
+    });
+}
+
 
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -39,7 +45,7 @@ const loginUser = asyncHandler(async (req, res) => {
   console.log("Entered Password:", password);
 
   const existingUser = await User.findOne({ email });
-
+  
   if (existingUser) {
     // console.log("Existing User Found");
     // console.log("Stored Hashed Password:", existingUser.password); 
