@@ -12,7 +12,7 @@ import Modal from "../../components/Modal";
 import AdminMenu from "./AdminMenu";
 
 const CategoryList = () => {
-  const { data: categories } = useFetchCategoriesQuery();
+  const { data: categories , refetch  } = useFetchCategoriesQuery();
   const [name, setName] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [updatingName, setUpdatingName] = useState("");
@@ -36,6 +36,7 @@ const CategoryList = () => {
         toast.error(result.error);
       } else {
         setName("");
+        refetch();
         toast.success(`${result.name} is created.`);
       }
     } catch (error) {
@@ -66,6 +67,7 @@ const CategoryList = () => {
         toast.success(`${result.name} is updated`);
         setSelectedCategory(null);
         setUpdatingName("");
+        refetch();
         setModalVisible(false);
       }
     } catch (error) {
@@ -80,6 +82,7 @@ const CategoryList = () => {
       if (result.error) {
         toast.error(result.error);
       } else {
+        refetch();
         toast.success(`${result.name} is deleted.`);
         setSelectedCategory(null);
         setModalVisible(false);
